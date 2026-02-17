@@ -10,57 +10,17 @@ service layer. Built as a portfolio showcase for AI Architect roles.
 
 ## Architecture
 
-```
-                         +----------------+
-                         |   Documents    |
-                         +-------+--------+
-                                 |
-                                 v
-                         +-------+--------+
-                         |    Chunker     |
-                         | (Recursive     |
-                         |  CharSplitter) |
-                         +-------+--------+
-                                 |
-                                 v
-                         +-------+--------+
-                         |   Embeddings   |
-                         | (OpenAI /      |
-                         |  Voyage AI)    |
-                         +-------+--------+
-                                 |
-                                 v
-                         +-------+--------+
-                         |   ChromaDB     |
-                         | (Vector Store) |
-                         +-------+--------+
-                                 |
-                    +------------+------------+
-                    |                         |
-                    v                         v
-           +-------+--------+       +--------+-------+
-           | Semantic Search |       |  BM25 Sparse   |
-           |  (Chroma ANN)  |       |   Retrieval    |
-           +-------+--------+       +--------+-------+
-                    |                         |
-                    +------------+------------+
-                                 |
-                                 v
-                     +-----------+-----------+
-                     | Reciprocal Rank Fusion|
-                     +-----------+-----------+
-                                 |
-                                 v
-                         +-------+--------+
-                         |      LLM       |
-                         | (OpenAI /      |
-                         |  Anthropic)    |
-                         +-------+--------+
-                                 |
-                                 v
-                         +-------+--------+
-                         |   Response     |
-                         +----------------+
+```mermaid
+flowchart TD
+    DOC[Documents] --> CHUNK["Chunker\n(Recursive CharSplitter)"]
+    CHUNK --> EMB["Embeddings\n(OpenAI / Voyage AI)"]
+    EMB --> CHROMA["ChromaDB\n(Vector Store)"]
+    CHROMA --> SEM["Semantic Search\n(Chroma ANN)"]
+    CHROMA --> BM25["BM25 Sparse\nRetrieval"]
+    SEM --> RRF["Reciprocal Rank Fusion"]
+    BM25 --> RRF
+    RRF --> LLM["LLM\n(OpenAI / Anthropic)"]
+    LLM --> RESP([Response])
 ```
 
 ---
